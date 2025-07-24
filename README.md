@@ -68,15 +68,13 @@ As digital payments rise, so do scams. Smart Safe Pay AI:
 For any queries, reach out:
 
 **Shivam**  
-House No – 395, Village Daria, Gali Number – 3,  
-Chandigarh – 160101  
-📧 [Add email if desired]
+https://www.linkedin.com/in/shiivam-maurya/
 
 ---
 
 ## 📜 License
 
-This project is protected by intellectual property rights and pending patent approval. Use, reproduction, or commercial deployment without permission is strictly prohibited.
+This project is protected by intellectual property rights and published as a patent on 02/11/2024 . Use, reproduction, or commercial deployment without permission is strictly prohibited.
 
 ---
 
