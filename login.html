@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Smart Safe Pay AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-blue-900 text-white">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <h1 class="text-2xl font-bold">MDR BANK</h1>
+      <nav class="space-x-6 text-lg">
+        <a href="index.html" class="hover:text-red-500">Home</a>
+        <a href="about.html" class="hover:text-red-500">About</a>
+        <a href="login.html" class="hover:text-red-500">Login</a>
+        <a href="dashboard.html" class="hover:text-red-500">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Login Section -->
+  <section class="flex justify-center items-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <h2 class="text-3xl font-bold text-center text-blue-900 mb-6">Login To Your Account</h2>
+
+      <!-- Updated Form with JS Redirect -->
+      <form onsubmit="redirectToDashboard(); return false;" class="space-y-4">
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">Username</label>
+          <input type="text" placeholder="Enter Username"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-900">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">Password</label>
+          <input type="password" placeholder="Enter Password"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-900">
+        </div>
+
+        <button type="submit"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition duration-300">Login</button>
+      </form>
+
+      <p class="text-center text-sm text-gray-600 mt-4">
+        Don't have an account?
+        <a href="#" class="text-red-600 hover:underline">Register Now</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white text-center py-4">
+    <p>&copy; 2025 Smart Safe Pay AI | Design guided by Master & Undefeatable Coder 🚀 </p>
+  </footer>
+
+  <!-- JS Redirect Script -->
+  <script>
+    function redirectToDashboard() {
+      // Simulated login success — redirect
+      window.location.href = "dashboard.html";
+    }
+  </script>
+
+</body>
+
+</html>

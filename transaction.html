@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Send Money - Smart Safe Pay AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <style>
+    .text-turquoise { color: #2acfcf; }
+    .bg-turquoise { background-color: #2acfcf; }
+    .hover\:bg-teal-600:hover { background-color: #2aa198; }
+    .focus\:ring-turquoise:focus { outline: none; box-shadow: 0 0 0 2px #2acfcf; }
+    .focus\:border-turquoise:focus { border-color: #2acfcf; }
+    .fade-in { animation: fadeIn 0.6s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    .spin { animation: spin 1s linear infinite; display: inline-block; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen text-gray-800">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-turquoise">MDR BANK</h1>
+      <div class="space-x-4">
+        <a href="dashboard.html" class="text-gray-700 hover:text-turquoise">Dashboard</a>
+        <a href="about.html" class="text-gray-700 hover:text-turquoise">About</a>
+        <a href="login.html" class="text-gray-700 hover:text-turquoise">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-xl mx-auto px-4 py-12">
+    <div class="bg-white rounded-xl p-8 shadow-lg">
+      <h2 class="text-2xl font-semibold mb-6 text-center text-gray-800">Send Money</h2>
+
+      <form onsubmit="handleTransaction(event)" class="space-y-5">
+        <!-- Recipient Name -->
+        <div>
+          <label for="receiver" class="block text-sm font-medium text-gray-600">Recipient Name</label>
+          <input type="text" id="receiver" name="receiver" required
+            class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-turquoise focus:border-turquoise"
+            placeholder="e.g., Rahul Verma" />
+        </div>
+
+        <!-- Account Number -->
+        <div>
+          <label for="accountNumber" class="block text-sm font-medium text-gray-600">Account Number</label>
+          <input type="text" id="accountNumber" name="accountNumber" required
+            class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-turquoise focus:border-turquoise"
+            placeholder="e.g., 1234567890" oninput="runSmartSafePayAI()" />
+          <div id="aiStatus" class="mt-2 text-sm font-medium"></div>
+        </div>
+
+        <!-- Amount -->
+        <div>
+          <label for="amount" class="block text-sm font-medium text-gray-600">Amount (INR)</label>
+          <input type="number" id="amount" name="amount" required min="1"
+            class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-turquoise focus:border-turquoise"
+            placeholder="e.g., 5000" />
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label for="message" class="block text-sm font-medium text-gray-600">Message (Optional)</label>
+          <textarea id="message" name="message" rows="3"
+            class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-turquoise focus:border-turquoise"
+            placeholder="Add a short message..."></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit"
+          class="w-full bg-turquoise text-white py-3 rounded-md hover:bg-teal-600 transition">Send Money</button>
+      </form>
+
+      <!-- Transaction Receipt -->
+      <div id="receipt" class="hidden mt-6 bg-green-50 border border-green-400 p-4 rounded-md shadow-md">
+        <h3 class="text-lg font-bold text-green-700 mb-2">✅ Transaction Successful!</h3>
+        <p id="receiptDetails" class="text-gray-700 text-sm"></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white text-center py-4 text-sm shadow-inner">
+    &copy; 2025 Smart Safe Pay AI. All rights reserved.
+  </footer>
+
+  <!-- Smart Safe Pay AI Script -->
+  <script>
+    let scanTimeout;
+
+    async function runSmartSafePayAI() {
+      const input = document.getElementById("accountNumber").value.trim();
+      const aiStatus = document.getElementById("aiStatus");
+      clearTimeout(scanTimeout);
+
+      if (!input) {
+        aiStatus.textContent = "";
+        return;
+      }
+
+      aiStatus.innerHTML = `<div class="text-blue-600 fade-in"><span class="spin">🔄</span> Smart Safe Pay AI is scanning...</div>`;
+
+      scanTimeout = setTimeout(async () => {
+        try {
+          const response = await fetch("data/accounts_with_mixed_payments.json"); // Path to JSON
+          const data = await response.json();
+          const account = data.accounts.find(acc => acc.accountNumber === input);
+
+          if (!account) {
+            aiStatus.innerHTML = `<div class="text-yellow-600 fade-in">⚠️ <strong>Account not found in Smart Safe Pay AI database.</strong></div>`;
+            return;
+          }
+
+          const fromCounts = {};
+          for (const txn of account.transactions) {
+            if (txn.type === "credit") {
+              fromCounts[txn.fromAccount] = (fromCounts[txn.fromAccount] || 0) + 1;
+            }
+          }
+
+          let uniqueCount = 0;
+          let multipleCount = 0;
+          for (const count of Object.values(fromCounts)) {
+            if (count > 1) multipleCount++;
+            else uniqueCount++;
+          }
+
+          if (uniqueCount > multipleCount) {
+            aiStatus.innerHTML = `<div class="text-red-600 fade-in">⚠️ <strong>Something is suspicious!</strong></div>`;
+          } else {
+            aiStatus.innerHTML = `<div class="text-green-600 fade-in">✅ <strong>Environment is Safe.</strong></div>`;
+          }
+        } catch (error) {
+          aiStatus.innerHTML = `<div class="text-red-600 fade-in">❌ <strong>Error loading account data.</strong></div>`;
+          console.error("Error fetching JSON:", error);
+        }
+      }, 2000);
+    }
+
+    function handleTransaction(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("receiver").value.trim();
+      const acc = document.getElementById("accountNumber").value.trim();
+      const amount = document.getElementById("amount").value.trim();
+      const receiptBox = document.getElementById("receipt");
+      const details = document.getElementById("receiptDetails");
+
+      if (!name || !acc || !amount) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const txnID = "TXN" + Math.floor(Math.random() * 1000000000);
+      const timestamp = new Date().toLocaleString();
+
+      details.innerHTML = `
+        <strong>Recipient:</strong> ${name}<br>
+        <strong>Account Number:</strong> ${acc}<br>
+        <strong>Amount:</strong> ₹${amount}<br>
+        <strong>Date:</strong> ${timestamp}<br>
+        <strong>Transaction ID:</strong> ${txnID}
+      `;
+
+      receiptBox.classList.remove("hidden");
+      receiptBox.scrollIntoView({ behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
