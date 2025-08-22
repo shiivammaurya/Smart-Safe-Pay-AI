@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPS Bank - Online Banking</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+        section:hover {
+            background-color: #f1f1f1;
+        }
+        h2, h3 {
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #smart-safe-pay-ai-warning {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .warning {
+            color: #e63946; /* Red for warning */
+        }
+        .safe {
+            color: #2ecc71; /* Green for safe */
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 20px;
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.6); 
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .transaction-history {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .account-warning {
+            color: #e63946; /* Red for account selection warning */
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>SPS Bank</h1>
+    <nav>
+        <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Account Info</a></li>
+            <li><a href="#">Support</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <h2>Welcome, Karan!</h2>
+    <section id="account-info">
+        <h3>Your Accounts</h3>
+        <ul>
+            <li>Account Number: 21536498</li>
+            <li>Account Balance: <span id="account-balance">$1000</span></li>
+        </ul>
+    </section>
+    
+    <section id="smart-safe-pay-ai">
+        <h3>Smart Safe Pay AI</h3>
+        <div id="smart-safe-pay-ai-warning">Choose an account to see security status.</div>
+        <button id="how-it-works">How It Works?</button>
+    </section>
+    
+    <section id="fund-transfer">
+        <h3>Fund Transfer</h3>
+        <form id="transfer-form">
+            <label for="from-account">From Account:</label>
+            <input type="text" id="from-account" value="21536498" disabled>
+            <label for="to-account">To Account:</label>
+            <select id="to-account" required>
+                <option value="" disabled selected>Select Account</option>
+                <option value="rahul-gandhi">Rahul Gandhi</option>
+                <option value="narendra-modi">Narendra Modi</option>
+            </select>
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" placeholder="Enter Amount" required>
+            <button type="submit">Transfer</button>
+        </form>
+    </section>
+    
+    <section id="transaction-history">
+        <h3>Transaction History</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Transaction Type</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody id="transaction-history-body">
+                <tr>
+                    <td>[Date]</td>
+                    <td>[Transaction Type]</td>
+                    <td>[Amount]</td>
+                    <td>[Balance]</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2023 SPS Bank. All rights reserved.</p>
+</footer>
+
+<!-- Modal for How It Works -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>How It Works</h2>
+        <div id="account-message" class="account-warning" style="display: none;"></div>
+        <div class="transaction-history">
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Transaction Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- This will be dynamically populated based on the selected account -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+const toAccountSelect = document.getElementById("to-account");
+const warningMessage = document.getElementById("smart-safe-pay-ai-warning");
+const transferForm = document.getElementById("transfer-form");
+const modal = document.getElementById("myModal");
+const closeModal = document.getElementsByClassName("close")[0];
+const howItWorksButton = document.getElementById("how-it-works");
+const historyTableBody = document.getElementById("history-table").getElementsByTagName('tbody')[0];
+const accountMessage = document.getElementById("account-message");
+
+// Warning based on selected account
+toAccountSelect.addEventListener("change", () => {
+    warningMessage.textContent = "Checking the environment...";
+    warningMessage.classList.remove("warning", "safe");
+
+    setTimeout(() => {
+        if (toAccountSelect.value === "rahul-gandhi") {
+            warningMessage.textContent = "Something suspicious detected.";
+            warningMessage.classList.add("warning");
+        } else if (toAccountSelect.value === "narendra-modi") {
+            warningMessage.textContent = "Environment is safe.";
+            warningMessage.classList.add("safe");
+        } else {
+            warningMessage.textContent = "Choose an account to see security status.";
+        }
+    }, 3000); // 3 seconds delay
+});
+
+// Fund transfer submission handling
+transferForm.addEventListener("submit", (event) => {
+    event.preventDefault(); // Prevent the default form submission
+
+    const amount = document.getElementById("amount").value;
+    const toAccount = toAccountSelect.value;
+
+    if (!toAccount) {
+        alert("Please select a recipient account.");
+        return;
+    }
+
+    alert(`Transferring ${amount} to ${toAccount}`);
+    transferForm.reset();
+});
+
+// Modal functionality
+howItWorksButton.onclick = function() {
+    // Clear previous data
+    historyTableBody.innerHTML = "";
+    accountMessage.style.display = "none";
+
+    const selectedAccount = toAccountSelect.value;
+
+    if (!selectedAccount) {
+        accountMessage.style.display = "block";
+        accountMessage.textContent = "Please select an account.";
+        modal.style.display = "block";
+        return;
+    }
+
+    if (selectedAccount === "rahul-gandhi") {
+        // Generate 20 shuffled one-time payments
+        const oneTimePayments = Array.from({ length: 20 }, (_, index) => ({
+            account: `Account ${String.fromCharCode(65 + index)}`,
+            date: `2023-10-${index + 1}`,
+            amount: `$${(Math.random() * 100 + 50).toFixed(2)}`,
+            type: "Credit"
+        })).sort(() => Math.random() - 0.5); // Shuffle
+
+        oneTimePayments.forEach(transaction => {
+            const row = historyTableBody.insertRow();
+            row.insertCell(0).textContent = transaction.account;
+            row.insertCell(1).textContent = transaction.date;
+            row.insertCell(2).textContent = transaction.amount;
+            row.insertCell(3).textContent = transaction.type;
+        });
+
+        accountMessage.style.display = "block"; // Show red flag warning
+        accountMessage.textContent = "All payments are one-time payments. This account is marked as red-flagged.";
+    } else if (selectedAccount === "narendra-modi") {
+        // Generate 20 repeated payments
+        const repeatedPayments = Array.from({ length: 20 }, (_, index) => ({
+            account: `Account ${String.fromCharCode(65 + index)}`,
+            date: `2023-10-${index + 1}`,
+            amount: `$${(Math.random() * 100 + 50).toFixed(2)}`,
+            type: index % 2 === 0 ? "Credit" : "Debit"
+        }));
+
+        repeatedPayments.forEach(transaction => {
+            const row = historyTableBody.insertRow();
+            row.insertCell(0).textContent = transaction.account;
+            row.insertCell(1).textContent = transaction.date;
+            row.insertCell(2).textContent = transaction.amount;
+            row.insertCell(3).textContent = transaction.type;
+        });
+
+        accountMessage.style.display = "block"; // Show repeated payments warning
+        accountMessage.textContent = "All payments are repeated payments.";
+    }
+
+    modal.style.display = "block";
+}
+
+// Close modal when clicking the close button
+closeModal.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+</body>
+</html>
